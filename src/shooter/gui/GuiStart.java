@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 
 import shooter.Gui;
 import shooter.ShooterDisplay;
+import shooter.game.World;
 
 public class GuiStart implements Gui {
 	public GuiStart() {
@@ -34,6 +35,21 @@ public class GuiStart implements Gui {
 	
 	private void onPressed(int i) {
 		System.out.println(START_MENU_OPTIONS[i] + " was pressed.");
+		
+		switch(START_MENU_OPTIONS[i]) {
+		case "Begin New Game":
+			World world = World.createNewWorld();
+			GuiGame gui = new GuiGame(world);
+			ShooterDisplay.getApp().setGui(gui);
+			break;
+		case "Continue Old Game":
+			break;
+		case "Credits":
+			break;
+		default:
+			System.err.println("Invalid option selected");
+			break;
+		}
 	}
 
 }

@@ -1,6 +1,8 @@
 package shooter;
 
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.util.HashMap;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
@@ -9,12 +11,17 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import shooter.gui.GuiGame;
 import shooter.gui.GuiStart;
 
 public class ShooterDisplay extends BasicGame {
 	private Gui mGui;
+	private static long lastButtonPress;
+	private static HashMap<String, Image> resources;
+	private static ShooterDisplay application;
 	
 	public ShooterDisplay() {
 		super(ShooterConstants.GAME_NAME);
@@ -28,7 +35,10 @@ public class ShooterDisplay extends BasicGame {
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		
+		resources = new HashMap<>();
+		resources.put("filler", new Image("resources/filler.png"));
+		resources.put("player", new Image("resources/player.png"));
+		resources.put("sky", new Image("resources/sky.png"));
 	}
 
 	@Override
@@ -39,7 +49,8 @@ public class ShooterDisplay extends BasicGame {
 	public static void main(String[] args) {
 		AppGameContainer container;
 		try {
-			container = new AppGameContainer(new ShooterDisplay());
+			application = new ShooterDisplay();
+			container = new AppGameContainer(application);
 			container.setTargetFrameRate(60);
 			container.start();
 		} catch (SlickException e) {
@@ -86,9 +97,24 @@ public class ShooterDisplay extends BasicGame {
 		
 		if(size.contains(Mouse.getX(), 480 - Mouse.getY())) {
 			drawCenteredText(graphics, string, y); // This has a cool effect.
-			if(Mouse.isButtonDown(0))
+			if(Mouse.isButtonDown(0) && getTime() - lastButtonPress > 100) // Simple, but effective
+			{
+				lastButtonPress = getTime();
 				return true;
+			}
 		}
 		return false;
+	}
+
+	public static Image getImage(String string) {
+		return resources.get(string);
+	}
+
+	public static ShooterDisplay getApp() {
+		return application;
+	}
+
+	public void setGui(GuiGame gui) {
+		mGui = gui;
 	}
 }
