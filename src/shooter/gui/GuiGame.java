@@ -14,18 +14,23 @@ public class GuiGame implements Gui {
 	public GuiGame(World world) {
 		this.world = world;
 		mPlayer = new EntityPlayer(world);
+		spawnPlayer();
 	}
 	
+	private void spawnPlayer() {
+		mPlayer.x = 50;
+		mPlayer.y = 448;
+	}
+
 	@Override
 	public void render(Graphics graphics, long time) {
-		// TODO Auto-generated method stub
-
+		world.render(graphics);
+		mPlayer.render(graphics);
 	}
 
 	@Override
 	public void update(long delta) {
-		// TODO Auto-generated method stub
-
+		mPlayer.doTick(delta);
 	}
 
 }

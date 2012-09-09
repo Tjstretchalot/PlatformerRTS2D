@@ -1,23 +1,32 @@
 package shooter.game;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import shooter.ShooterDisplay;
 
 public abstract class Entity {
-	private World world;
+	protected World world;
 	private Image image;
-	private float xVelocity;
-	private float yVelocity;
+	public float xVelocity;
+	public float yVelocity;
 	
-	private float x;
-	private float y;
+	public float x;
+	public float y;
 	
-	private byte direction; // A byte to allow up-down later, if necessary
+	/**
+	 * 0 is left, 1 is right
+	 */
+	protected byte direction; // A byte to allow up-down later, if necessary
 	
 	public Entity(World world) { 
 		this.world = world;
 		image = ShooterDisplay.getImage("filler");
+	}
+	
+	public Entity(World world, String img) {
+		this.world = world;
+		image = ShooterDisplay.getImage(img);
 	}
 	
 	/**
@@ -26,7 +35,14 @@ public abstract class Entity {
 	 */
 	public abstract void updateInput();
 	
-	public void doTick(long time) {
+	public void render(Graphics graphics) {
+		Image temp = image;
+		if(direction == 0)
+			temp = image.getFlippedCopy(true, false);
+		temp.draw(x, y);
+	}
+	
+	public void doTick(long delta) {
 		updateInput();
 		if(!willHitBoundary()) {
 			x += xVelocity;
